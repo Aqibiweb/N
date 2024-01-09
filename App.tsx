@@ -1,4 +1,3 @@
-
 import { RootNavigator } from './app/navigation';
 import { useFonts} from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';

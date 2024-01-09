@@ -9,284 +9,56 @@ import { NEWS_OPTIONS } from "./newsOption";
 import { getPostCall } from "../../utils/API";
 import { View, Text, FlatList, ScrollView,StyleProp,ViewStyle } from "react-native";
 import { color, typography } from "../../theme";
-
-
-//Component for category interface
-
-  //Interfaces
-
-  interface Category {
-    item: CategoryListItem;
-    index:number;
-    onPress:(category: string) => void;
-    isPress:{
-      status:boolean,
-      index:number
-    };
-  }
-  
-interface CategoryListItem {
-  category: string;
-}
-
-interface BulletDescription {
-  bulletPoints: string[];
-   style?: StyleProp<ViewStyle>;
-   headline:string
-  }
-
-  interface BulletDescriptionProps {
-    bulletPoints: string[];
-     style?: StyleProp<ViewStyle>;
-    }
-
-interface NewsListItemProps {
-  data:BulletDescription,
-  style?: StyleProp<ViewStyle>;
-  onPress:() => void;
-  index:number
-}
+import { Category } from "../../components";
+import { NewsDetailsComponent } from "../../components";
+import { NewsItem } from "../../components";
+import { DetailData } from "../../components";
+import { CategoryListItem } from "../../components";
+import { BulletDescription } from "../../components";
 
 interface CategoryLisItemProps {
   item: CategoryListItem;
   index:number
 }
-
-interface DetailData{
-    title:string;
-    news:string;
-}
-
-interface NewsDetails {
-  data:DetailData
-  style?: React.CSSProperties;
-}
-
 interface  NewsListItem  {
   item: BulletDescription;
   index:number;
 }
 
-interface Heading {
-  children: ReactNode;
-  style?: StyleProp<ViewStyle>;
-}
-
-//Component for category
-const Category :React.FC<Category> = ({ item, index, onPress, isPress }) =>{
-  return (
-    <TouchableOpacity
-      style={{ marginLeft: 0 }}
-      onPress={() => {
-        onPress(item?.category);
-      }}
-    >
-      <View
-        style={{
-          backgroundColor: (
-            index === 0 && isPress.index < 0
-              ? "rgba(256,256,256,0.15)"
-              : isPress.status && index === isPress.index
-          )
-            ? "rgba(256,256,256,0.15)"
-            : "black",
-          borderRadius: 20,
-        }}
-      >
-        <Text
-          style={{
-            color: "white",
-            paddingHorizontal: 12,
-            paddingVertical: 3,
-            fontFamily: typography.interRegular,
-          }}
-        >
-          {item?.category}
-        </Text>
-      </View>
-    </TouchableOpacity>
-  );
-}
-
-//Heading Component
-function Heading({ children, style }: Heading) {
-  return (
-    <Text
-      style={[
-        style ,
-        {
-          color: "white",
-          fontSize: 15,
-          fontFamily: typography.secondary,
-        },
-      ]}
-    >
-      {children}
-    </Text>
-  );
-}
-
-//Description Component
-function Description({ bulletPoints, style }: BulletDescriptionProps) {
-  return (
-    <View style={style}>
-      {bulletPoints?.map((data: any) => {
-        return (
-          <View
-            style={[
-              {
-                flexDirection: "row",
-                marginTop: 10,
-                backgroundColor: "rgba(256,256,256,0.0)",
-              },
-            ]}
-          >
-            <View
-              style={{
-                width: 5,
-                height: 5,
-                borderRadius: 5 / 2,
-                top: 6,
-                backgroundColor: color.text,
-              }}
-            />
-            <Text
-              style={[
-                {
-                  color: "white",
-                  fontSize: 14,
-                  fontFamily: typography.primary,
-                  marginLeft: 10,
-                },
-              ]}
-            >
-              {data}
-            </Text>
-          </View>
-        );
-      })}
-    </View>
-  );
-}
-
-// Date component
-function DateComponent({ title, children, style }: any) {
-  return (
-    <View
-      style={[
-        { ...style },
-        { backgroundColor: "rgba(256,256,256,0.15)", borderRadius: 20 },
-      ]}
-    >
-      <Text
-        style={{
-          color: "rgba(256,256,256,0.45)",
-          paddingVertical: 3,
-          fontSize: 10,
-          alignSelf: "center",
-          fontFamily: typography.interRegular,
-        }}
-      >
-        {children}
-      </Text>
-    </View>
-  );
-}
-
-// News Detail Component
-const NewsDetailsComponent : React.FC<NewsDetails>=({ style, data }: any)=> {
-  return (
-    <ScrollView
-      style={[
-        { ...style },
-        {
-          backgroundColor: "rgba(256,256,256,0.15)",
-          borderRadius: 20,
-          marginBottom: "10%",
-        },
-      ]}
-    >
-      <Text
-        style={{
-          color: "rgba(256,256,256,0.45)",
-          paddingVertical: 3,
-          fontSize: 10,
-          fontFamily: typography.interRegular,
-        }}
-      >
-        {moment().format("MMMM Do")}
-      </Text>
-      <Heading style={{ marginTop: 20 }}>{data?.title}</Heading>
-      <Text
-        style={{
-          color: "white",
-          fontSize: 14,
-          fontFamily: typography.primary,
-          marginTop: 10,
-          paddingBottom: "30%",
-        }}
-      >
-        {data.news}
-      </Text>
-    </ScrollView>
-  );
-}
-
-// News Item
-const NewsItem  :React.FC<NewsListItemProps> = ({ style, data, onPress }) =>{
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={[style , { backgroundColor: "black" }]}
-    >
-      <Heading>{data?.headline}</Heading>
-      <Description
-        bulletPoints={data?.bulletPoints}
-        style={{ marginTop: 10, paddingLeft: 2, paddingRight: "1%" }}
-      />
-      <DateComponent style={{ width: "25%", marginTop: 20 }}>
-        {moment().format("MMMM Do")}
-      </DateComponent>
-    </TouchableOpacity>
-  );
-}
-
-export default function NewScreen() {
+export default function NewsScreen() {
   const [isPress, setIsPress] = useState({
     status: false,
     index: -1,
   });
   const [isDetailsNews, setIsDetailsNews] = useState(false);
   const [news, setNews] = useState(null);
-  const [isloading, setLoading] = useState(false);
+  const [isloading, setLoading] = useState(true);
   const [newsDetail, setNewsDetail] = useState<DetailData>({
     title:'',
     news:''
   });
 
-  //API Call here
   useEffect(() => {
     if (isPress?.index < 0) {
       getNews("politics");
     }
   }, []);
 
-  //getNews
 
   function getNews(category: string) {
-    // setLoading(true);
+    setLoading(true);
     getPostCall("news", "POST", {
       location: "US",
       category: category,
     })
       .then((res: any) => {
-        // setLoading(false);
-        console.log("Response---", res?.data);
+        setLoading(false);
+        // console.log("Response---", res?.data);
         setNews(res?.data?.news);
         setIsDetailsNews(false);
       })
       .catch((err: any) => {
-        // setLoading(false);
+        setLoading(false);
         console.log(err);
       });
   }

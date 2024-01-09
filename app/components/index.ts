@@ -1,0 +1,6 @@
+export * from "./category/category"
+export * from "./newsDetailsComponet/newsDetailsComponent"
+export * from "./heading/heading"
+export * from "./description/description"
+export * from "./date/date"
+export * from "./newsItem/newsitem"
