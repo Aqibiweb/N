@@ -2,10 +2,10 @@
 
 export const NEWS_OPTIONS = [
   {
-    category: 'Politics',
+    category: 'Technology',
   },
   {
-    category: 'Technology',
+    category: 'Politics',
   },
   {
     category: 'Business',
@@ -16,4 +16,23 @@ export const NEWS_OPTIONS = [
   {
     category: 'Sport',
   },
+  {
+    category: 'Science',
+  },
+  {
+    category: 'Health',
+  },
+  {
+    category: 'Crime',
+  },
+  {
+    category: 'Education',
+  },
+  {
+    category: 'LifeStyle',
+  },
+  {
+    category: 'Culture',
+  },
+
 ];

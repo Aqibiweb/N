@@ -16,7 +16,7 @@ import { DetailData } from "../../components";
 import { CategoryListItem } from "../../components";
 import { BulletDescription } from "../../components";
 
-interface CategoryLisItemProps {
+export interface CategoryLisItemProps {
   item: CategoryListItem;
   index:number
 }

@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import { Text,StyleProp,ViewStyle,View } from "react-native";
 import { color, typography } from "../../theme";
-
 interface BulletDescriptionProps {
     bulletPoints: string[];
      style?: StyleProp<ViewStyle>;
