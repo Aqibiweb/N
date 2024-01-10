@@ -50,13 +50,13 @@ export const Category :React.FC<Category> = ({ item, index, onPress, style,isPre
           <Text
             style={
               [
-                styleText,
                 {
                   color: "white",
                   paddingHorizontal: 12,
                   paddingVertical: 3,
                   fontFamily: typography.interRegular,
-                }
+                },
+                styleText
               ]
      }
           >

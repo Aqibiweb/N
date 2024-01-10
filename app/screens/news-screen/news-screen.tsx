@@ -1,10 +1,8 @@
 import {
   StyleSheet,
-  TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import { useEffect, useState,ReactNode } from "react";
-import moment from "moment";
+import { useEffect, useState } from "react";
 import { NEWS_OPTIONS } from "./newsOption";
 import { getPostCall } from "../../utils/API";
 import { View, Text, FlatList, ScrollView,StyleProp,ViewStyle } from "react-native";
@@ -25,10 +23,11 @@ interface  NewsListItem  {
   index:number;
 }
 
-export default function NewsScreen() {
+export default function NewsScreen(props:any) {
   const [isPress, setIsPress] = useState({
     status: false,
     index: -1,
+    category:'technology'
   });
   const [isDetailsNews, setIsDetailsNews] = useState(false);
   const [news, setNews] = useState(null);
@@ -37,10 +36,15 @@ export default function NewsScreen() {
     title:'',
     news:''
   });
+  const [newsOptions, setNewsOptions] = useState<any>(NEWS_OPTIONS);
+  
 
   useEffect(() => {
+    setIsPress( props?.route?.params?.isNewPress)
+    setNewsOptions((previous:any) => [ ...props?.route?.params?.newCategory,...previous]);
+
     if (isPress?.index < 0) {
-      getNews("politics");
+      getNews(props?.route?.params?.isNewPress?.category);
     }
   }, []);
 
@@ -66,25 +70,7 @@ export default function NewsScreen() {
   //News Handler
 
   function newsNavHandler(category: string) {
-    switch (category) {
-      case "Politics":
-        getNews("politics");
-        break;
-      case "Technology":
-        getNews("technology");
-        break;
-      case "Business":
-        getNews("business");
-        break;
-      case "Entertainment":
-        getNews("entertainment");
-        break;
-      case "Sport":
-        getNews("sport");
-        break;
-      default:
-        break;
-    }
+    getNews(category);
   }
 
   //News Details Handler
@@ -141,7 +127,7 @@ export default function NewsScreen() {
         )}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index): any => index}
-        data={NEWS_OPTIONS}
+        data={newsOptions}
       />
       {isloading ? (
         <View

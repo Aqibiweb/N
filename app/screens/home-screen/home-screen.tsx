@@ -13,7 +13,7 @@ import {
 import { NEWS_OPTIONS } from "../news-screen/newsOption";
 import { CategoryLisItemProps } from "../news-screen/news-screen";
 import { color, typography } from "../../theme";
-import { Category } from "../../components";
+import { Category, NewsItem } from "../../components";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RouteProp } from "@react-navigation/native";
 import { CategoryListItem } from "../../components";
@@ -33,10 +33,13 @@ const HomeScreen: React.FC<ScreenProps> = ({ navigation }) => {
   const [isPress, setIsPress] = useState({
     status: false,
     index: -1,
+    category:'technology'
   });
   const [isNewPress, setIsNewPress] = useState({
     status: false,
     index: -1,
+    category:'technology'
+
   });
   const [newCategoryText, setNewCategoryText] = useState("");
   const [newCategory, setNewCategory] = useState<CategoryListItem[]>([]);
@@ -45,24 +48,7 @@ const HomeScreen: React.FC<ScreenProps> = ({ navigation }) => {
     console.log("Value----", newCategory);
   }, [newCategory]);
 
-  //News Handler
 
-  function newsNavHandler(category: string) {
-    switch (category) {
-      case "Politics":
-        break;
-      case "Technology":
-        break;
-      case "Business":
-        break;
-      case "Entertainment":
-        break;
-      case "Sport":
-        break;
-      default:
-        break;
-    }
-  }
 
   // Date component
   const Button: React.FC<Category> = ({
@@ -148,107 +134,53 @@ const HomeScreen: React.FC<ScreenProps> = ({ navigation }) => {
       <View
         style={{
           backgroundColor: "black",
+          paddingHorizontal:10
         }}
       >
         {
-          <View style={styles.category_row_containter_1}>
-            {NEWS_OPTIONS?.map((data, index) => {
-              if (index < 4) {
-                return (
-                  <Category
-                    item={data}
-                    index={index}
-                    isPress={isPress}
-                    onPress={(res: string) => {
-                      if (isPress?.index !== index) {
-                        setIsNewPress((prevRegion:any)=>({
-                          ...prevRegion,
-                          status:false,
-                          index:-2
-                        }))
-                        newsNavHandler(res);
-                        setIsPress((prevRegion: any) => ({
-                          ...prevRegion,
-                          status:
-                            isPress?.index !== index && isPress.status
-                              ? true
-                              : !isPress.status,
-                          index: index,
-                        }));
-                      }
-                    }}
-                  />
-                );
-              }
-            })}
-          </View>
+ 
+          <FlatList
+          columnWrapperStyle={{justifyContent: 'space-between'}}
+          data={NEWS_OPTIONS}
+          numColumns={4}
+          // style={{flex:0.5}}
+          contentContainerStyle={{flex:0}}
+          renderItem={({item,index}:CategoryLisItemProps) => {
+            return (
+              <Category
+              item={item}
+              index={index}
+              isPress={isPress}
+              style={{
+                marginVertical:10,
+                marginRight:index===7?15:index===10?60:0,
+                marginLeft:index===4?20:index===8?50:0,
+              }}
+              onPress={(res: string) => {
+                if (isPress?.index !== index) {
+                  setIsNewPress((prevRegion:any)=>({
+                    ...prevRegion,
+                    status:false,
+                    index:-2
+                  }))
+                  setIsPress((prevRegion: any) => ({
+                    ...prevRegion,
+                    status:
+                      isPress?.index !== index && isPress.status
+                        ? true
+                        : !isPress.status,
+                    index: index,
+                    category:res
+                  }));
+                }
+              }}
+            />
+            );
+          }}
+          />
         }
-        {
-          <View style={styles.category_row_containter_2}>
-            {NEWS_OPTIONS?.map((data, index) => {
-              if (index >= 4 && index < 8) {
-                return (
-                  <Category
-                    item={data}
-                    index={index}
-                    isPress={isPress}
-                    onPress={(res: string) => {
-                      if (isPress?.index !== index) {
-                        setIsNewPress((prevRegion:any)=>({
-                          ...prevRegion,
-                          status:false,
-                          index:-2
-                        }))
-                        newsNavHandler(res);
-                        setIsPress((prevRegion: any) => ({
-                          ...prevRegion,
-                          status:
-                            isPress?.index !== index && isPress.status
-                              ? true
-                              : !isPress.status,
-                          index: index,
-                        }));
-                      }
-                    }}
-                  />
-                );
-              }
-            })}
-          </View>
-        }
-        {
-          <View style={styles.category_row_containter_3}>
-            {NEWS_OPTIONS?.map((data, index) => {
-              if (index >= 8) {
-                return (
-                  <Category
-                    item={data}
-                    index={index}
-                    isPress={isPress}
-                    onPress={(res: string) => {
-                      if (isPress?.index !== index) {
-                        setIsNewPress((prevRegion:any)=>({
-                          ...prevRegion,
-                          status:false,
-                          index:-2
-                        }))
-                        newsNavHandler(res);
-                        setIsPress((prevRegion: any) => ({
-                          ...prevRegion,
-                          status:
-                            isPress?.index !== index && isPress.status
-                              ? true
-                              : !isPress.status,
-                          index: index,
-                        }));
-                      }
-                    }}
-                  />
-                );
-              }
-            })}
-          </View>
-        }
+
+        
       </View>
       <View
         style={{
@@ -269,6 +201,8 @@ const HomeScreen: React.FC<ScreenProps> = ({ navigation }) => {
               paddingLeft: 10,
               color: color.text,
             }}
+            selectionColor={color?.text}
+
             placeholder=" Or add your own..."
             placeholderTextColor={"rgba(256,256,256,0.45)"}
           />
@@ -289,7 +223,8 @@ const HomeScreen: React.FC<ScreenProps> = ({ navigation }) => {
                   setIsNewPress((prevRegion: any) => ({
                     ...prevRegion,
                     status:true,
-                    index:newCategory.length
+                    index:newCategory.length,
+                    category:newCategoryText
                   }))
                   let category: CategoryListItem = {
                     category: newCategoryText,
@@ -342,11 +277,12 @@ const HomeScreen: React.FC<ScreenProps> = ({ navigation }) => {
             style={{marginHorizontal:5,marginVertical:5}}
             onPress={(res: string) => {
               if (isNewPress?.index !== index) {
-                newsNavHandler(res);
+                console.log('res---',res)
                 setIsPress((prevRegion: any) => ({
                   ...prevRegion,
                   status:false,
-                  index:-2
+                  index:-2,
+                  category:res
                 }))
                 setIsNewPress((prevRegion: any) => ({
                   ...prevRegion,
@@ -355,6 +291,7 @@ const HomeScreen: React.FC<ScreenProps> = ({ navigation }) => {
                       ? true
                       : !isNewPress.status,
                   index: index,
+                  category:res
                 }));
               }
             }}
@@ -364,10 +301,21 @@ const HomeScreen: React.FC<ScreenProps> = ({ navigation }) => {
         />
       }
       </View>
-      <Button
+      <Category
         item={{ category: "Start Reading" }}
         index={0}
-        onPress={() => {}}
+        onPress={() => {
+          isPress.index>-2?(navigation.navigate('news',
+            isPress
+          )):isNewPress.index>-2&&(navigation.navigate('news',{
+            isNewPress:isNewPress,
+            newCategory:newCategory
+          }))
+
+          console.log('Index of dummy category--',isPress.index,isNewPress.index)
+          console.log('Index of dummy category--',isPress.category,isNewPress.category)
+
+        }}
         isPress={{ status: true, index: -1 }}
         styleText={{
           paddingHorizontal: 40,
