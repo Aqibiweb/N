@@ -12,20 +12,16 @@ export interface Category {
     item: CategoryListItem;
     index:number;
     onPress:(category: string) => void;
-    isPress:{
-      status:boolean,
-      index:number
-    };
     styleText?: StyleProp<ViewStyle>|TextStyle;
-    style?: StyleProp<ViewStyle>;
+    style?: StyleProp<ViewStyle>|any;
     textContainerStyle?: StyleProp<ViewStyle>;
 
   }
 
-export const Category :React.FC<Category> = ({ item, index, onPress, style,isPress,styleText,textContainerStyle }) =>{
+export const Category :React.FC<Category> = ({ item, index, style,onPress,styleText,textContainerStyle }) =>{
     return (
       <TouchableOpacity
-        style={[style]}
+        style={style}
         onPress={() => {
           onPress(item?.category);
         }}

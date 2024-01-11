@@ -2,7 +2,7 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useState,useRef,useMemo,useCallback} from "react";
 import { NEWS_OPTIONS } from "./newsOption";
 import { getPostCall } from "../../utils/API";
 import { View, Text, FlatList, ScrollView,StyleProp,ViewStyle } from "react-native";
@@ -13,6 +13,7 @@ import { NewsItem } from "../../components";
 import { DetailData } from "../../components";
 import { CategoryListItem } from "../../components";
 import { BulletDescription } from "../../components";
+import BottomSheet from '@gorhom/bottom-sheet';
 
 export interface CategoryLisItemProps {
   item: CategoryListItem;
@@ -25,11 +26,7 @@ interface  NewsListItem  {
 var focusIndex=0;
 
 export default function NewsScreen(props:any) {
-  const [isPress, setIsPress] = useState({
-    status: false,
-    index: -1,
-    category:'technology'
-  });
+
   const [isDetailsNews, setIsDetailsNews] = useState(false);
   const [news, setNews] = useState(null);
   const [isloading, setLoading] = useState(true);
@@ -38,12 +35,13 @@ export default function NewsScreen(props:any) {
     news:''
   });
   const [newsOptions, setNewsOptions] = useState<any>(NEWS_OPTIONS);
-  
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
 
   useEffect(() => {
     // console.log('Value---',props?.route?.params[0]?.category)
-    setNewsOptions(props?.route?.params);
-    getNews(props?.route?.params[0]?.category);
+    // setNewsOptions(props?.route?.params);
+    // getNews(props?.route?.params[0]?.category);
   }, []);
 
 
@@ -68,7 +66,8 @@ export default function NewsScreen(props:any) {
   //News Handler
 
   function newsNavHandler(category: string) {
-    getNews(category);
+
+    // getNews(category);
   }
 
   //News Details Handler
@@ -94,8 +93,11 @@ export default function NewsScreen(props:any) {
         console.log(err);
       });
   }
-  
+  const snapPoints = useMemo(() => ['25%', '50%'], []);
 
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log('handleSheetChanges', index);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -106,11 +108,8 @@ export default function NewsScreen(props:any) {
           <Category
             item={item}
             index={index}
-            isPress={isPress}
             style={{marginLeft:index!==0&&9}}
             onPress={(res: string) => {
-
-              if (isPress?.index !== index) {
                 newsNavHandler(res);
                 const updatedArray = [...newsOptions];
                 updatedArray[focusIndex] = { ...newsOptions[focusIndex], isFocus:false};
@@ -118,7 +117,6 @@ export default function NewsScreen(props:any) {
                 setNewsOptions(updatedArray)
                 focusIndex=index
                 setIsDetailsNews(false);
-              }
             }}
           />
         )}
@@ -159,6 +157,16 @@ export default function NewsScreen(props:any) {
           )}
         </View>
       )}
+           <BottomSheet
+        ref={bottomSheetRef}
+        index={1}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
+      >
+        <View style={styles.contentContainer}>
+          <Text>Awesome 🎉</Text>
+        </View>
+      </BottomSheet>
     </View>
   );
 }
@@ -204,5 +212,9 @@ news_list_container:{
 },
 news_list_item:{
   paddingTop: 20, paddingLeft: 8 
-}
+},
+contentContainer: {
+  flex: 1,
+  alignItems: 'center',
+},
 });
