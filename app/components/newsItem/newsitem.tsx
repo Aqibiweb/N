@@ -23,10 +23,13 @@ interface NewsListItemProps {
 export const NewsItem  :React.FC<NewsListItemProps> = ({ style, data, onPress }) =>{
     return (
       <TouchableOpacity
-        onPress={onPress}
         style={[style , { backgroundColor: "black" }]}
+        disabled={true}
       >
+        <TouchableOpacity         onPress={onPress}
+>
         <Heading>{data?.headline}</Heading>
+        </TouchableOpacity>
         <Description
           bulletPoints={data?.bulletPoints}
           style={{ marginTop: 10, paddingLeft: 2, paddingRight: "1%" }}

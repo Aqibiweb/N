@@ -1,4 +1,4 @@
-import { useEffect, useState, ReactNode } from "react";
+import { useRef,useMemo,useCallback } from "react";
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import { typography } from "../../theme";
 import moment from "moment";
 import { Heading } from "../heading/heading";
 import { Description } from "../description/description";
+import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
 export interface DetailData {
   title: string;
@@ -19,24 +20,46 @@ export interface DetailData {
 interface NewsDetails {
   data: DetailData;
   style?: React.CSSProperties;
+  onClose:(category: boolean) => void;
+
 }
 
 // News Detail Component
 export const NewsDetailsComponent: React.FC<NewsDetails> = ({
   style,
   data,
+  onClose
 }: any) => {
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
+
+  const snapPoints = useMemo(() => ['1%', '100%'], []);
+
+  const handleSheetChanges = useCallback((index: number) => {
+    index===0&&(onClose(false))
+  }, []);
+
   return (
-    <ScrollView
-      style={[
+    <BottomSheet
+    ref={bottomSheetRef}
+    index={1}
+    backgroundStyle={{backgroundColor:'rgba(256,256,256,0.15)'}}
+    style={
+      [
         { ...style },
         {
           backgroundColor: "rgba(256,256,256,0.15)",
           borderRadius: 20,
           marginBottom: "10%",
         },
-      ]}
+      ]
+    }
+  
+    snapPoints={snapPoints}
+    handleIndicatorStyle={{backgroundColor:"white"}}
+    onChange={handleSheetChanges}
     >
+      <BottomSheetScrollView>
       <Text
         style={{
           color: "rgba(256,256,256,0.45)",
@@ -129,6 +152,7 @@ export const NewsDetailsComponent: React.FC<NewsDetails> = ({
       >
         {data?.news?.sources}
       </Text>
-    </ScrollView>
+      </BottomSheetScrollView>
+    </BottomSheet>
   );
 };
