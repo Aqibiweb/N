@@ -4,6 +4,7 @@ import { typography } from "../../theme";
 
 export interface CategoryListItem {
     category: string;
+    isFocus:boolean
   }
   
 
@@ -33,18 +34,12 @@ export const Category :React.FC<Category> = ({ item, index, onPress, style,isPre
           style={
             [
               {
-                backgroundColor: (
-                  index === 0 && isPress.index ===-1
-                    ? "rgba(256,256,256,0.15)"
-                    : isPress.status && index === isPress.index
-                )
-                  ? "rgba(256,256,256,0.15)"
-                  : "black",
+                backgroundColor:item?.isFocus?
+                "rgba(256,256,256,0.15)": "black",
                 borderRadius: 20,
               },
               textContainerStyle
             ]
-  
         }
         >
           <Text

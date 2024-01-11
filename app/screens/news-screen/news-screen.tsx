@@ -22,6 +22,7 @@ interface  NewsListItem  {
   item: BulletDescription;
   index:number;
 }
+var focusIndex=0;
 
 export default function NewsScreen(props:any) {
   const [isPress, setIsPress] = useState({
@@ -40,12 +41,9 @@ export default function NewsScreen(props:any) {
   
 
   useEffect(() => {
-    setIsPress( props?.route?.params?.isNewPress)
-    setNewsOptions((previous:any) => [ ...props?.route?.params?.newCategory,...previous]);
-
-    if (isPress?.index < 0) {
-      getNews(props?.route?.params?.isNewPress?.category);
-    }
+    // console.log('Value---',props?.route?.params[0]?.category)
+    setNewsOptions(props?.route?.params);
+    getNews(props?.route?.params[0]?.category);
   }, []);
 
 
@@ -109,17 +107,16 @@ export default function NewsScreen(props:any) {
             item={item}
             index={index}
             isPress={isPress}
+            style={{marginLeft:index!==0&&9}}
             onPress={(res: string) => {
+
               if (isPress?.index !== index) {
                 newsNavHandler(res);
-                setIsPress((prevRegion: any) => ({
-                  ...prevRegion,
-                  status:
-                    isPress?.index !== index && isPress.status
-                      ? true
-                      : !isPress.status,
-                  index: index,
-                }));
+                const updatedArray = [...newsOptions];
+                updatedArray[focusIndex] = { ...newsOptions[focusIndex], isFocus:false};
+                updatedArray[index] = { ...newsOptions[index], isFocus:true };
+                setNewsOptions(updatedArray)
+                focusIndex=index
                 setIsDetailsNews(false);
               }
             }}

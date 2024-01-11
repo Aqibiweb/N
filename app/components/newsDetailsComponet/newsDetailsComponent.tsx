@@ -3,6 +3,7 @@ import { View, Text, FlatList, ScrollView,StyleProp,ViewStyle } from "react-nati
 import { typography } from "../../theme";
 import moment from "moment";
 import { Heading } from "../heading/heading";
+import { Description } from "../description/description";
 
 export interface DetailData{
     title:string;
@@ -38,16 +39,89 @@ export const NewsDetailsComponent : React.FC<NewsDetails>=({ style, data }: any)
           {moment().format("MMMM Do")}
         </Text>
         <Heading style={{ marginTop: 20 }}>{data?.title}</Heading>
+        {/* Overview text */}
+        <Text
+          style={{
+            color: "white",
+            fontSize: 14,
+            fontFamily: typography.interBold,
+            marginTop: 27,
+          }}
+        >
+            Overview
+        </Text>
         <Text
           style={{
             color: "white",
             fontSize: 14,
             fontFamily: typography.primary,
-            marginTop: 10,
-            paddingBottom: "30%",
+            marginTop:10
           }}
         >
-          {data.news}
+          {data?.news?.overview}
+        </Text>
+                {/* Overview in bullet points */}
+                <Text
+          style={{
+            color: "white",
+            fontSize: 14,
+            fontFamily: typography.primary,
+            marginTop: 27,
+          }}
+        >
+            Quick Overview in Bullet Points
+        </Text>
+        <Description 
+                  bulletPoints={data?.news?.quickoverview}
+                  style={{ marginTop: 10, paddingLeft: 10, paddingRight: "1%" }}
+
+        />
+                <Description 
+                  bulletPoints={data?.news?.quickoverview}
+                  style={{ marginTop: 10, paddingLeft: 10, paddingRight: "1%" }}
+
+        />
+                <Text
+          style={{
+            color: "white",
+            fontSize: 14,
+            fontFamily: typography.primary,
+            marginTop: data?.news?.relevant_backstory?27:0,
+          }}
+        >
+          {data?.news?.relevant_backstory}
+        </Text>
+        <Text
+          style={{
+            color: "white",
+            fontSize: 14,
+            fontFamily: typography.primary,
+            marginTop: data?.news?.current_developments?27:0,
+          }}
+        >
+          {data?.news?.current_developments}
+        </Text>
+        <Text
+          style={{
+            color: "white",
+            fontSize: 14,
+            fontFamily: typography.primary,
+            marginTop:data?.news?.speculation?27:0,
+          }}
+        >
+          {data?.news?.speculation}
+        </Text>
+        <Text
+          style={{
+            color: "white",
+            fontSize: 14,
+            fontFamily: typography.primary,
+            marginTop:data?.news?.sources?27:0,
+            paddingBottom:'20%',
+            
+          }}
+        >
+          {data?.news?.sources}
         </Text>
       </ScrollView>
     );

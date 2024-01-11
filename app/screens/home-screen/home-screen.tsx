@@ -18,12 +18,16 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RouteProp } from "@react-navigation/native";
 import { CategoryListItem } from "../../components";
 
+
 interface ScreenProps {
   navigation: NativeStackNavigationProp<any, "Details">;
   route: RouteProp<any, "Details">;
 }
 
 const HomeScreen: React.FC<ScreenProps> = ({ navigation }) => {
+  const [newsOptions, setNewsOptions] = useState<any>(NEWS_OPTIONS);
+
+
   useEffect(() => {
     navigation?.setOptions({
       headerLeft: () => <View />,
@@ -43,12 +47,6 @@ const HomeScreen: React.FC<ScreenProps> = ({ navigation }) => {
   });
   const [newCategoryText, setNewCategoryText] = useState("");
   const [newCategory, setNewCategory] = useState<CategoryListItem[]>([]);
-
-  useEffect(() => {
-    console.log("Value----", newCategory);
-  }, [newCategory]);
-
-
 
   // Date component
   const Button: React.FC<Category> = ({
@@ -134,14 +132,14 @@ const HomeScreen: React.FC<ScreenProps> = ({ navigation }) => {
       <View
         style={{
           backgroundColor: "black",
-          paddingHorizontal:10
+          paddingHorizontal:0
         }}
       >
         {
  
           <FlatList
           columnWrapperStyle={{justifyContent: 'space-between'}}
-          data={NEWS_OPTIONS}
+          data={newsOptions}
           numColumns={4}
           // style={{flex:0.5}}
           contentContainerStyle={{flex:0}}
@@ -151,12 +149,17 @@ const HomeScreen: React.FC<ScreenProps> = ({ navigation }) => {
               item={item}
               index={index}
               isPress={isPress}
+              textContainerStyle={{marginHorizontal:2}}
               style={{
                 marginVertical:10,
                 marginRight:index===7?15:index===10?60:0,
                 marginLeft:index===4?20:index===8?50:0,
               }}
               onPress={(res: string) => {
+                const updatedArray = [...newsOptions];
+                console.log('value---',newsOptions[index]?.isFocus?false:true)
+                updatedArray[index] = { ...newsOptions[index], isFocus:updatedArray[index]?.isFocus?false:true };
+                setNewsOptions(updatedArray)
                 if (isPress?.index !== index) {
                   setIsNewPress((prevRegion:any)=>({
                     ...prevRegion,
@@ -228,6 +231,7 @@ const HomeScreen: React.FC<ScreenProps> = ({ navigation }) => {
                   }))
                   let category: CategoryListItem = {
                     category: newCategoryText,
+                    isFocus:true
                   };
                   setNewCategory((previous) => [...previous, category]);
                 }
@@ -276,6 +280,10 @@ const HomeScreen: React.FC<ScreenProps> = ({ navigation }) => {
             isPress={isNewPress}
             style={{marginHorizontal:5,marginVertical:5}}
             onPress={(res: string) => {
+              const updatedArray = [...newCategory];
+              console.log('value---',newCategory[index]?.isFocus?false:true)
+              updatedArray[index] = { ...newCategory[index], isFocus:newCategory[index]?.isFocus?false:true};
+              setNewCategory(updatedArray);
               if (isNewPress?.index !== index) {
                 console.log('res---',res)
                 setIsPress((prevRegion: any) => ({
@@ -305,13 +313,25 @@ const HomeScreen: React.FC<ScreenProps> = ({ navigation }) => {
         item={{ category: "Start Reading" }}
         index={0}
         onPress={() => {
-          isPress.index>-2?(navigation.navigate('news',
-            isPress
-          )):isNewPress.index>-2&&(navigation.navigate('news',{
-            isNewPress:isNewPress,
-            newCategory:newCategory
-          }))
 
+          let  favoriteCategoryList= newsOptions.filter((item:CategoryListItem,index:number)=>{if(item.isFocus===true){
+            let value =item
+            value.isFocus=false
+            return value
+          }});
+          favoriteCategoryList[0] = { ...favoriteCategoryList[0], isFocus:newCategory.length===0?true:false};
+
+          let  newsCategoryList = newCategory.filter((item:CategoryListItem,index:number)=>{if(item.isFocus===true){
+            let value =item
+            value.isFocus=(index===0)?true:false
+            return value
+          }});
+          let newsCategory = [...newsCategoryList,...favoriteCategoryList]
+          console.log('Value---',favoriteCategoryList)
+
+          navigation.navigate('news',
+            newsCategory
+          )
           console.log('Index of dummy category--',isPress.index,isNewPress.index)
           console.log('Index of dummy category--',isPress.category,isNewPress.category)
 
