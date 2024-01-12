@@ -1,13 +1,12 @@
 import axios from "axios";
-
-let backendUrl = "http://45.32.80.95:5000/api/";
+import { apis } from "../../constant";
 
 export const getPostCall =(url:string, method:string, data:any) =>{
     return new Promise((resolve, reject) => {
       try {
         var config = {
           method: method,
-          url: backendUrl + url,
+          url: apis.news + url,
           data: data,
         };
         axios(config)
