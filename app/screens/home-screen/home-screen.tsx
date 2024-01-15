@@ -18,14 +18,13 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RouteProp } from "@react-navigation/native";
 import { CategoryListItem } from "../../components";
 
-
 interface ScreenProps {
   navigation: NativeStackNavigationProp<any, "Details">;
   route: RouteProp<any, "Details">;
 }
 
 const HomeScreen: React.FC<ScreenProps> = ({ navigation }) => {
-  const [newsOptions, setNewsOptions] = useState<any>(NEWS_OPTIONS);
+const [newsOptions, setNewsOptions] = useState<any>(NEWS_OPTIONS);
 
 
   useEffect(() => {
@@ -34,70 +33,16 @@ const HomeScreen: React.FC<ScreenProps> = ({ navigation }) => {
     });
   }, []);
 
-  const [isPress, setIsPress] = useState({
-    status: false,
-    index: -1,
-    category:'technology'
-  });
+
   const [isNewPress, setIsNewPress] = useState({
     status: false,
     index: -1,
     category:'technology'
 
   });
+
   const [newCategoryText, setNewCategoryText] = useState("");
   const [newCategory, setNewCategory] = useState<CategoryListItem[]>([]);
-
-  // Date component
-  const Button: React.FC<Category> = ({
-    item,
-    index,
-    onPress,
-    isPress,
-    styleText,
-    style,
-    textContainerStyle,
-  }) => {
-    return (
-      <TouchableOpacity
-        style={[{ marginLeft: 0 }, style]}
-        onPress={() => {
-          onPress(item?.category);
-        }}
-      >
-        <View
-          style={[
-            {
-              backgroundColor: (
-                index === 0 && isPress.index < 0
-                  ? "rgba(256,256,256,0.15)"
-                  : isPress.status && index === isPress.index
-              )
-                ? "rgba(256,256,256,0.15)"
-                : "black",
-              borderRadius: 20,
-              alignSelf: "center",
-            },
-            textContainerStyle,
-          ]}
-        >
-          <Text
-            style={[
-              {
-                color: "white",
-                paddingHorizontal: 12,
-                paddingVertical: 3,
-                fontFamily: typography.interRegular,
-              },
-              styleText,
-            ]}
-          >
-            {item?.category}
-          </Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
 
   return (
     <KeyboardAvoidingView
@@ -148,7 +93,6 @@ const HomeScreen: React.FC<ScreenProps> = ({ navigation }) => {
               <Category
               item={item}
               index={index}
-              isPress={isPress}
               textContainerStyle={{marginHorizontal:2}}
               style={{
                 marginVertical:10,
@@ -157,25 +101,11 @@ const HomeScreen: React.FC<ScreenProps> = ({ navigation }) => {
               }}
               onPress={(res: string) => {
                 const updatedArray = [...newsOptions];
-                console.log('value---',newsOptions[index]?.isFocus?false:true)
-                updatedArray[index] = { ...newsOptions[index], isFocus:updatedArray[index]?.isFocus?false:true };
+                updatedArray[index] = { ...newsOptions[index],
+                   isFocus:updatedArray[index]?.isFocus?false:true
+                   };
                 setNewsOptions(updatedArray)
-                if (isPress?.index !== index) {
-                  setIsNewPress((prevRegion:any)=>({
-                    ...prevRegion,
-                    status:false,
-                    index:-2
-                  }))
-                  setIsPress((prevRegion: any) => ({
-                    ...prevRegion,
-                    status:
-                      isPress?.index !== index && isPress.status
-                        ? true
-                        : !isPress.status,
-                    index: index,
-                    category:res
-                  }));
-                }
+    
               }}
             />
             );
@@ -218,11 +148,7 @@ const HomeScreen: React.FC<ScreenProps> = ({ navigation }) => {
               onPress={() => {
                 if (newCategoryText.length > 0) {
                   console.log("category---", newCategoryText);
-                  setIsPress((prevRegion: any) => ({
-                    ...prevRegion,
-                    status:false,
-                    index:-2
-                  }))
+   
                   setIsNewPress((prevRegion: any) => ({
                     ...prevRegion,
                     status:true,
@@ -231,7 +157,8 @@ const HomeScreen: React.FC<ScreenProps> = ({ navigation }) => {
                   }))
                   let category: CategoryListItem = {
                     category: newCategoryText,
-                    isFocus:true
+                    isFocus:true,
+                    data:[]
                   };
                   setNewCategory((previous) => [...previous, category]);
                 }
@@ -277,21 +204,15 @@ const HomeScreen: React.FC<ScreenProps> = ({ navigation }) => {
             <Category
             item={item}
             index={index}
-            isPress={isNewPress}
             style={{marginHorizontal:5,marginVertical:5}}
             onPress={(res: string) => {
               const updatedArray = [...newCategory];
               console.log('value---',newCategory[index]?.isFocus?false:true)
-              updatedArray[index] = { ...newCategory[index], isFocus:newCategory[index]?.isFocus?false:true};
+              updatedArray[index] = { ...newCategory[index], isFocus:newCategory[index]?.isFocus?false:true,data:[]};
               setNewCategory(updatedArray);
               if (isNewPress?.index !== index) {
                 console.log('res---',res)
-                setIsPress((prevRegion: any) => ({
-                  ...prevRegion,
-                  status:false,
-                  index:-2,
-                  category:res
-                }))
+
                 setIsNewPress((prevRegion: any) => ({
                   ...prevRegion,
                   status:
@@ -310,7 +231,7 @@ const HomeScreen: React.FC<ScreenProps> = ({ navigation }) => {
       }
       </View>
       <Category
-        item={{ category: "Start Reading" }}
+        item={{ category: "Start Reading",isFocus:true,data:[] }}
         index={0}
         onPress={() => {
 
@@ -324,6 +245,7 @@ const HomeScreen: React.FC<ScreenProps> = ({ navigation }) => {
           let  newsCategoryList = newCategory.filter((item:CategoryListItem,index:number)=>{if(item.isFocus===true){
             let value =item
             value.isFocus=(index===0)?true:false
+
             return value
           }});
           let newsCategory = [...newsCategoryList,...favoriteCategoryList]
@@ -332,11 +254,7 @@ const HomeScreen: React.FC<ScreenProps> = ({ navigation }) => {
           navigation.navigate('news',
             newsCategory
           )
-          console.log('Index of dummy category--',isPress.index,isNewPress.index)
-          console.log('Index of dummy category--',isPress.category,isNewPress.category)
-
         }}
-        isPress={{ status: true, index: -1 }}
         styleText={{
           paddingHorizontal: 40,
           padding: "1%",

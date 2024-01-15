@@ -12,7 +12,7 @@ export interface BulletDescription {
      headline:string
     }
 
-interface NewsListItemProps {
+export interface NewsListItemProps {
     data:BulletDescription,
     style?: StyleProp<ViewStyle>;
     onPress:() => void;

@@ -1,51 +1,68 @@
 //New navigator dummy data
-
 export const NEWS_OPTIONS = [
   
   {
     category: 'Technology',
-    isFocus:false
+    isFocus:false,
+    data:[]
   },
   {
     category: 'Politics',
-    isFocus:false
+    isFocus:false,
+    data:[]
   },
   {
     category: 'Business',
-    isFocus:false
+    isFocus:false,
+    data:[]
+
   },
   {
     category: 'Entertainment',
-    isFocus:false
+    isFocus:false,
+    data:[]
+
   },
   {
     category: 'Sport',
-    isFocus:false
+    isFocus:false,
+    data:[]
+
   },
   {
     category: 'Science',
-    isFocus:false
+    isFocus:false,
+    data:[]
+
   },
   {
     category: 'Health',
-    isFocus:false
+    isFocus:false,
+    data:[]
+
   },
   {
     category: 'Crime',
-    isFocus:false
+    isFocus:false,
+    data:[]
+
   },
   {
     category: 'Education',
-    isFocus:false
+    isFocus:false,
+    data:[]
+
   },
   {
     category: 'LifeStyle',
-    isFocus:false
+    isFocus:false,
+    data:[]
+
 
   },
   {
     category: 'Culture',
-    isFocus:false
-
+    isFocus:false,
+    data:[]
   },
 ];

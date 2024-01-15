@@ -1,4 +1,4 @@
-import React from "react";
+import React,{ useEffect,ReactNode} from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "../screens/home-screen/home-screen";
@@ -9,8 +9,10 @@ export type RootParamList = {
   home: undefined;
   news: undefined;
 };
+interface MyContextProviderProps {
+  children: ReactNode;
+}
 const Stack = createNativeStackNavigator<RootParamList>();
-
 const RootStack = () => {
   return (
     <Stack.Navigator
@@ -30,6 +32,9 @@ const RootStack = () => {
 };
 
 export const RootNavigator: React.FC = (props, ref) => {
+    useEffect(()=>{
+
+    })
   return (
     <NavigationContainer>
       <RootStack />

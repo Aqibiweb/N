@@ -1,13 +1,15 @@
 import * as React from "react"
 import { StyleProp,TouchableOpacity,View,Text,ViewStyle,TextStyle} from "react-native"
 import { typography } from "../../theme";
+import { BulletDescription, NewsListItemProps } from "../newsItem/newsitem";
+import { NewsListItem } from "../../screens/news-screen/news-screen";
 
 export interface CategoryListItem {
     category: string;
-    isFocus:boolean
+    isFocus:boolean,
+    data:ArrayLike<BulletDescription>
   }
   
-
 export interface Category {
     item: CategoryListItem;
     index:number;
