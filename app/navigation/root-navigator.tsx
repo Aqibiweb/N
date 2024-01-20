@@ -9,9 +9,7 @@ export type RootParamList = {
   home: undefined;
   news: undefined;
 };
-interface MyContextProviderProps {
-  children: ReactNode;
-}
+
 const Stack = createNativeStackNavigator<RootParamList>();
 const RootStack = () => {
   return (

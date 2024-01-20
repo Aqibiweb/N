@@ -17,7 +17,7 @@ export interface DetailData {
   title: string;
   news: string;
 }
-interface NewsDetails {
+export interface NewsDetails {
   data: DetailData;
   style?: React.CSSProperties;
   onClose:(category: boolean) => void;

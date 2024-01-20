@@ -3,6 +3,7 @@ import { StyleProp,TouchableOpacity,View,Text,ViewStyle,TextStyle} from "react-n
 import { typography } from "../../theme";
 import { BulletDescription, NewsListItemProps } from "../newsItem/newsitem";
 import { NewsListItem } from "../../screens/news-screen/news-screen";
+import { DetailData } from "../newsDetailsComponet/newsDetailsComponent";
 
 export interface CategoryListItem {
     category: string;

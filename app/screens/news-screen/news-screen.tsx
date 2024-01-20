@@ -49,21 +49,20 @@ console.log('call--------')
   // Promise method to fetch all news data at same time
   async function getNewsAll()
   {
-    const responses = await Promise.all(newsOptions.map((res,index)=>{fetchData(res,index)}))
-    console.log(responses)
-
+    newsOptions.map((res,index)=>{fetchData(res,index)})
   }
 
   const fetchData = async (params:any,index:number) => {
-    console.log("ALL API HIT ----",params?.category,index)
+    let category:string = params?.category?.toLowerCase()
+    console.log("ALL API HIT ----",category)
     setLoading(true);
     getPostCall("news", "POST", {
       location: "US",
-      category: params?.category,
+      category:category,
     })
       .then((res: any) => {
         // setNews(res?.data?.news);
-        console.log("Response---", index);
+        console.log("Index",index,res?.data);
         setNewsOptions((prevArray:any) =>
         {
 
@@ -83,15 +82,21 @@ console.log('call--------')
           return finalValue
         }
         );
+        
+        if(focusIndex===index)
+        {
+          setIsDetailsNews(false);
+          setLoading(false);
+        }
 
-        setIsDetailsNews(false);
-        setLoading(false);
-        setIsDetailsNews(false);
-        setLoading(false);
       })
       .catch((err: any) => {
-        setLoading(false);
-        console.log(err);
+        if(focusIndex===index)
+        {
+          setIsDetailsNews(false);
+          setLoading(false);
+        }
+        console.log('Error',err?.response?.data);
       });
   }
 
@@ -119,40 +124,19 @@ console.log('call--------')
         console.log(err);
       });
   }
-
-  //News Handler
-
-  function newsNavHandler(category: string,previousIndex:number,currentIndex:number) {
-    console.log("Title---", newsOptions[currentIndex]?.data?.length);
-    if(newsOptions[currentIndex]?.data?.length<=0)
-    {
-    getNews(category,previousIndex,currentIndex);
-  }
-
-  }
-
   //News Details Handler
 
   function newsDetailsHandler(category: string) {
 
-      setLoading(true);
-      getPostCall("news/detail", "POST", {
-        title: category,
-      })
-        .then((res: any) => {
-          let details = res?.data;
-          details = {
-            ...details,
-            title: category,
-          };
+        const array: BulletDescription[] = Array.from(newsOptions[focusIndex].data);
+        console.log('array---',array)
+         const data:BulletDescription[]= array.filter((item:BulletDescription)=>(item.headline===category))
+          let details :DetailData ={
+            title:category,
+            news:data[0].detail
+          } 
           setNewsDetail(details);
           setIsDetailsNews(true);
-          setLoading(false);
-        })
-        .catch((err: any) => {
-          setLoading(false);
-          console.log(err);
-        });
   }
 
   return (

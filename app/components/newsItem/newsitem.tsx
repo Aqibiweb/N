@@ -5,11 +5,14 @@ import { Heading } from "../heading/heading";
 import moment from "moment";
 import { Description } from "../description/description";
 import { DateComponent } from "../date/date";
+import { DetailData, NewsDetails } from "../newsDetailsComponet/newsDetailsComponent";
 
 export interface BulletDescription {
     bulletPoints: string[];
      style?: StyleProp<ViewStyle>;
-     headline:string
+     headline:string,
+     detail:string
+
     }
 
 export interface NewsListItemProps {
